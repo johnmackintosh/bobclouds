@@ -9,7 +9,7 @@ library(ggimage)
 
 `%notin%` = function(x,y) !(x %in% y)
 
-data <- readRDS(file="apple.RDS") 
+data <- readRDS(file="shrubbery.RDS") 
 
 data <-  data %>% 
     mutate(linenumber = row_number())  
@@ -21,8 +21,12 @@ data2 <- data %>%  select(textDisplay, linenumber)
 
 text_df <- data2 %>% 
     unnest_tokens(word,textDisplay) %>% 
-    filter(word %notin% c("a","it","39",'44','www.youtube.com', 'https',
-                          'href', 'br','quot', 'f21mtojmcac', 'racist')) %>% 
+    filter(word %notin% c("a","it","39",'44','www.youtube.com', 
+                          'https','href', 'br','quot', 'f21mtojmcac',
+                          'msuuivzs6js', 'amp', 'https.www.youtube.com',
+                          '39', '39 s', '39 t', 'fucking', 'muslims', 'racist',
+                          'muslim'
+                          )) %>% 
     mutate(linenumber = row_number())
 
 

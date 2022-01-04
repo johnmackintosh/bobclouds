@@ -14,9 +14,6 @@ data <- readRDS(file="mavis.RDS")
 data <-  data %>% 
     mutate(linenumber = row_number())  
 
-
-
-
 data2 <- data %>%  select(textDisplay, linenumber)
 
 text_df <- data2 %>% 
@@ -37,10 +34,18 @@ tidy_df <- text_df %>%
     filter(stringr::str_detect(word,"[a-z`]$"),
            !word %in% stop_words$word)
 
-wc <- tidy_df %>% 
-    count(word, sort = TRUE) %>%
-    filter(n > 5) %>% 
-    ungroup() %>% 
-    mutate(word = reorder(word,n)) 
+
+vidsentiment <- text_df %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative) %>% 
+  filter(sentiment > 5)
+
+wc <- vidsentiment %>% 
+  select(word, sentiment) %>% 
+  filter(sentiment > 5) %>% 
+  rename(n = sentiment) %>% 
+  mutate(word = reorder(word,n)) 
 
 wordcloud2::wordcloud2(wc)
